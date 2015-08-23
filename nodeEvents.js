@@ -24,10 +24,86 @@ Counter.prototype.hello = function(str){
 };
 
 
+var r = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+var Survey = function(questions){
+  this.questions = questions || [];
+  this.answers = [];
+  this.r = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false
+  });
+  this.ask = function(q){
+    var ctx = this;
+    this.r.question(q, function(data){
+      ctx.answers.push(data);
+      ctx.r.close();
+      ctx.emit('answered', ctx.answers);
+    });
+  }
+};
+
+Survey.prototype = new EventEmitter();
+
+//Survey.prototype.ask = function(q){
+//  var ctx = this;
+//  this.r.question(q, function(data){
+//    ctx.answers.push(data);
+//    ctx.r.close();
+//    this.emit('answered', ctx.answers);
+//  });
+//};
+
+Survey.prototype.run = function(){
+  this.ask(this.questions[0] + '? ');
+  console.log(this.answers);
+};
 
 
-counter.increment();
-counter.increment();
-counter.increment();
-counter.hello('Dale');
-counter.increment();
+var survey = new Survey(['Name', 'Gender', 'Date of Birth']);
+survey.on('answered', function(data){
+  console.dir(data + ' answered');
+  survey.ask();
+});
+survey.run();
+
+
+//survey.questions.forEach(function(q){
+//  console.log(q);
+//});
+//var a = [];
+//function ask(cb){
+//  r.question('What is your Name? ', function(data){
+//    a.push(data);
+//    r.question('dob? ', function(data){
+//      a.push(data);
+//      cb();
+//    });
+//  });
+//
+//}
+
+
+
+//ask(function(){
+//  console.log('Hello ' + a);
+//  r.close();
+//});
+
+
+
+
+
+
+
+
+
+//counter.increment();
+//counter.increment();
+//counter.increment();
+//counter.hello('Dale');
+//counter.increment();
