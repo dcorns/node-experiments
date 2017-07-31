@@ -48,4 +48,5 @@ survey.on('answered', function(data){ //nothing important here except it demonst
 
 survey.ask(function(data){
   console.log(data);
+  process.exit();
 });
